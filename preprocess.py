@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     voc_path = sys.argv[1]
     txt_path = sys.argv[2]
-    bin_path = sys.argv[2] + '.pth'
+    bin_path = sys.argv[3] + '.pth'
     assert os.path.isfile(voc_path)
     assert os.path.isfile(txt_path)
 
