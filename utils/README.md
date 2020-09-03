@@ -74,23 +74,25 @@ binarized/
 ```
 To chage the number of lines in test/valid sets, edit here .
 
-3.) Apply BPE using proper codes to all the splitted files. 
+3.) **Apply BPE using proper codes to all the splitted files.** 
 ```
 python3 applybpe --fast_path ../tools/FastBPE/fast --out_path ../processed/ --bpe_path ../bpe_codes --data_path ../splitted/ --maintain_fs --delete_old
 ```
 The ```--maintain_fs``` flag ensures that the data files aren't all put directly in ```../processed``` folder, and that the file structure remains the same as in ```../splitted/```.
 ```--fast_path``` is used to provide the path to the ```FastBPE```'s script. See [here](https://github.com/deterministic-algorithms-lab/Large-XLM#1-preparing-the-data).
 
-4.) Binarize all the splitted files , in one go. 
+4.) **Binarize all the splitted files , in one go.** 
 ```
 python3 binarize.py --in_path ../processed/ --out_path ../binarized/ --vocab_path ../vocab --xlm_path ../XLM/ --delete_old
 ```
 All files in ```../processed/``` are binarized(==pickled), and put into ```../binarized/``` . Initial file structure, before this command, must folllow the splitted format,
 or should have all files directly under ```../processed/```.
 
-5.) Does split-wise training for big files which have been splitted. The usual training command( see [here](https://github.com/deterministic-algorithms-lab/Large-XLM/#1-preparing-the-data) )
+5.) **Do split-wise training for big files which have been splitted.**
+
+The usual training command( see [here](https://github.com/deterministic-algorithms-lab/Large-XLM/#1-preparing-the-data) )
 is provided in the ```--command``` argument.
-The below command, first trains on data in ```split0/``` + data directly under the ```data_path``` provided in the command that is provided in ```--command``` argument,
+In the command below, we first train on data in ```split0/``` + data directly under the ```data_path``` provided in the command that is provided in ```--command``` argument,
 then on data in ```split1/``` + data directly under the ```data_path``` provided in the command that is provided in ```--command``` argument , and  so on uptil ```splitn/```.
 This process is repeated ```--n_reps``` times.
 
@@ -99,3 +101,5 @@ python3 ../split_trainer.py --command "usual-command(CUDA_VISIBLE_DEVICES=0,1 py
 ```
 ```--data_path``` in original command must correspond to directory having binarized data in format of the splitted file tree. Currently, early stopping, based on ```n_reps```
 is not supported, but will be in future.
+
+**It is best to comment all ```os.system()``` calls first, and see all the commands printed; confirm their correct-ness, and then uncomment the ```os.system()``` calls, and execute the files. Especially if you are using ```--delete_path``` .**
