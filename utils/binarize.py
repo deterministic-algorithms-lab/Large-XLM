@@ -16,7 +16,7 @@ if __name__== '__main__' :
 
     args = parser.parse_args()
 
-    cmd_initial = "python3 "+os.path.join(args.xlm_path,"preprocess.py"+" "
+    cmd_initial = "python3 "+os.path.join(args.xlm_path,"preprocess.py")+" "
 
     if os.path.isdir(os.path.join(args.in_path, 'split'+str(0))) :
         is_splitted=True
@@ -33,7 +33,7 @@ if __name__== '__main__' :
                 rectified_filename = filename
             
             #Figuring out destination for storing binarized file. 
-            if root.split('/')[-1][0:5] == 'split' :
+            if is_splitted and root.split('/')[-1][0:5] == 'split' :
                 out_split_dir = os.path.join( args.out_path, root.split('/')[-1] )
                 if not os.path.isdir(out_split_dir) :
                     os.mkdir(out_split_dir) 

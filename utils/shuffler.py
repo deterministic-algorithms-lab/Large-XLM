@@ -13,18 +13,17 @@ data_dir = args.data_dir
 files = os.listdir(data_dir)
 print(files)
 for filename in files :
-    new_filename = 'shuf'+filename
-    command = 'shuf '+os.path.join(data_dir, filename)+' > '+os.path.join(data_dir, new_filename)
-    print(command)
-    os.system(command)
-    #os.wait()
-
-    command = 'rm '+os.path.join(data_dir, filename)
-    print(command)
-    os.system(command)
-    #os.wait()
-    
-    command = 'mv '+os.path.join(data_dir, new_filename)+' '+os.path.join(data_dir, filename)
-    print(command)
-    os.system(command)
-    #os.wait()
+    if filename.endswith('.mono') :
+        new_filename = 'shuf'+filename
+        command = 'shuf '+os.path.join(data_dir, filename)+' > '+os.path.join(data_dir, new_filename)
+        print(command)
+        os.system(command)
+        
+        command = 'rm '+os.path.join(data_dir, filename)
+        print(command)
+        os.system(command)
+        
+        command = 'mv '+os.path.join(data_dir, new_filename)+' '+os.path.join(data_dir, filename)
+        print(command)
+        os.system(command)
+        

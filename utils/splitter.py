@@ -19,7 +19,7 @@ def make_dirs(outdir, n) :
         dir_path = os.path.join(outdir, 'split'+str(i)+'/')
         if not os.path.isdir(dir_path) :
             print("Making directory ", dir_path)
-            os.mkdir(dir_path)
+            os.mkdirs(dir_path)         
 
 def is_bigfile(filepath) :
     with open(filepath, 'r') as f :
@@ -133,20 +133,21 @@ if __name__== '__main__' :
     for root, dirs, files in os.walk(args.indir) :
         for filename in files :
             filepath = os.path.join(root, filename)
-        
-            if not already_splitted(filename) :
-            
-                train_path = os.path.join(args.outdir, 'train.'+filename) 
-                valid_path = os.path.join(args.outdir, 'valid.'+filename)
-                test_path = os.path.join(args.outdir, 'test.'+filename)
 
-                split(filepath, train_path, valid_path, test_path, args.split_bigfiles)                
+            if not filename.endswith('.gz') :
+                if not already_splitted(filename) :
                 
-                if args.delete_old :
-                    command = 'rm '+filepath
-                    os.system(command)
-                
-            else : 
-                copy_or_cut = "mv " if args.delete_old else "cp "
-                command = copy_or_cut+filepath+' '+os.path.join(args.outdir, filename)
-                os.system(command)    
+                    train_path = os.path.join(args.outdir, 'train.'+filename) 
+                    valid_path = os.path.join(args.outdir, 'valid.'+filename)
+                    test_path = os.path.join(args.outdir, 'test.'+filename)
+
+                    split(filepath, train_path, valid_path, test_path, args.split_bigfiles)                
+                    
+                    if args.delete_old :
+                        command = 'rm '+filepath
+                        os.system(command)
+                    
+                else : 
+                    copy_or_cut = "mv " if args.delete_old else "cp "
+                    command = copy_or_cut+filepath+' '+os.path.join(args.outdir, filename)
+                    os.system(command)    
