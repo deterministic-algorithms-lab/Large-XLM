@@ -1,6 +1,5 @@
-
-#Splits files int train test and valid files. 
-#Large files can be split into many train files each of which are used one by one for training in split_train.py
+# Splits files int train test and valid files. 
+# Large files can be split into many train files each of which are used one by one for training in split_train.py
 
 '''
 Usage :-  
@@ -115,39 +114,38 @@ def already_splitted(filename) :
     return False
 
 
-if __name__== '__main__' :
-    parser = argparse.ArgumentParser() 
-    parser.add_argument('outdir', metavar='-o', nargs=1, help='directory where to write files')
-    parser.add_argument('indir', metavar='-i', nargs=1, help='directory where to read files from')
-    parser.add_argument('--split_bigfiles', metavar='-s', type=int, default=0, help='the no. of parts into which any file with >1000000 lines is to be split')
-    parser.add_argument('--delete_old', action='store_true', help='If this flag is provided, original files are deleted.')
+parser = argparse.ArgumentParser() 
+parser.add_argument('outdir', metavar='-o', nargs=1, help='directory where to write files')
+parser.add_argument('indir', metavar='-i', nargs=1, help='directory where to read files from')
+parser.add_argument('--split_bigfiles', metavar='-s', type=int, default=0, help='the no. of parts into which any file with >1000000 lines is to be split')
+parser.add_argument('--delete_old', action='store_true', help='If this flag is provided, original files are deleted.')
 
-    args = parser.parse_args()
+args = parser.parse_args()
 
-    args.indir = args.indir[0]
-    args.outdir = args.outdir[0]
+args.indir = args.indir[0]
+args.outdir = args.outdir[0]
 
-    if args.split_bigfiles>0 :
-        make_dirs(args.outdir, args.split_bigfiles)
+if args.split_bigfiles>0 :
+    make_dirs(args.outdir, args.split_bigfiles)
     
-    for root, dirs, files in os.walk(args.indir) :
-        for filename in files :
-            filepath = os.path.join(root, filename)
+for root, dirs, files in os.walk(args.indir) :
+    for filename in files :
+        filepath = os.path.join(root, filename)
 
-            if not filename.endswith('.gz') :
-                if not already_splitted(filename) :
+        if not filename.endswith('.gz') and not filename.beginswith('codes.') :
+            if not already_splitted(filename) :
                 
-                    train_path = os.path.join(args.outdir, 'train.'+filename) 
-                    valid_path = os.path.join(args.outdir, 'valid.'+filename)
-                    test_path = os.path.join(args.outdir, 'test.'+filename)
+                train_path = os.path.join(args.outdir, 'train.'+filename) 
+                valid_path = os.path.join(args.outdir, 'valid.'+filename)
+                test_path = os.path.join(args.outdir, 'test.'+filename)
 
-                    split(filepath, train_path, valid_path, test_path, args.split_bigfiles)                
+                split(filepath, train_path, valid_path, test_path, args.split_bigfiles)                
                     
-                    if args.delete_old :
-                        command = 'rm '+filepath
-                        os.system(command)
+                if args.delete_old :
+                    command = 'rm '+filepath
+                    os.system(command)
                     
-                else : 
-                    copy_or_cut = "mv " if args.delete_old else "cp "
-                    command = copy_or_cut+filepath+' '+os.path.join(args.outdir, filename)
-                    os.system(command)    
+            else : 
+                copy_or_cut = "mv " if args.delete_old else "cp "
+                command = copy_or_cut+filepath+' '+os.path.join(args.outdir, filename)
+                os.system(command)    

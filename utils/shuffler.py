@@ -13,7 +13,7 @@ data_dir = args.data_dir
 files = os.listdir(data_dir)
 print(files)
 for filename in files :
-    if filename.endswith('.mono') :
+    if filename.endswith('.mono') :     
         new_filename = 'shuf'+filename
         command = 'shuf '+os.path.join(data_dir, filename)+' > '+os.path.join(data_dir, new_filename)
         print(command)
