@@ -12,19 +12,20 @@ Files(in ./data/) having 'train.', 'test.', 'valid.', 'dev.' in their front, are
 import os
 import shutil
 import argparse
+from general import execute
 
 def make_dirs(outdir, n) :
     for i in range(n) :
         dir_path = os.path.join(outdir, 'split'+str(i)+'/')
         if not os.path.isdir(dir_path) :
             print("Making directory ", dir_path)
-            os.mkdirs(dir_path)         
+            os.makedirs(dir_path)         
 
 def is_bigfile(filepath) :
     with open(filepath, 'r') as f :
         for i, l in enumerate(f) :
             pass
-        if i+1>1000000 :
+        if i+1>10000 :
             return i+1
         print(filepath, " has ", i+1, " lines ")
         return 0
@@ -132,7 +133,7 @@ for root, dirs, files in os.walk(args.indir) :
     for filename in files :
         filepath = os.path.join(root, filename)
 
-        if not filename.endswith('.gz') and not filename.beginswith('codes.') :
+        if not filename.endswith('.gz') and not filename.startswith('codes.') :
             if not already_splitted(filename) :
                 
                 train_path = os.path.join(args.outdir, 'train.'+filename) 
@@ -143,9 +144,9 @@ for root, dirs, files in os.walk(args.indir) :
                     
                 if args.delete_old :
                     command = 'rm '+filepath
-                    os.system(command)
+                    execute(command)
                     
             else : 
                 copy_or_cut = "mv " if args.delete_old else "cp "
                 command = copy_or_cut+filepath+' '+os.path.join(args.outdir, filename)
-                os.system(command)    
+                execute(command)    

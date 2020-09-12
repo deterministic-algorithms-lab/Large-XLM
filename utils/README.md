@@ -102,4 +102,4 @@ python3 ../split_trainer.py --command "usual-command(CUDA_VISIBLE_DEVICES=0,1 py
 ```--data_path``` in original command must correspond to directory having binarized data in format of the splitted file tree. Currently, early stopping, based on ```n_reps```
 is not supported, but will be in future.
 
-**It is best to comment all ```os.system()``` calls first, and see all the commands printed; confirm their correct-ness, and then uncomment the ```os.system()``` calls, and execute the files. Especially if you are using ```--delete_path``` .**
+**It is best to comment all ```execute()/os.system()``` calls first, and see all the commands printed; confirm their correct-ness, and then uncomment the ```execute()/os.system()``` calls, and execute the files. Especially if you are using ```--delete_path``` .**

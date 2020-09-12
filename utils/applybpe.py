@@ -5,30 +5,12 @@ import os
 import subprocess
 import argparse
 import re 
-
-
-def get_lang(filename) :
-    if len(filename)>=8 and bool(re.match('..-..\...',filename[-8:])) :
-        return filename[-2]+filename[-1]
-    elif len(filename)>=7 and bool(re.match('..\.mono', filename[-7:])) :
-        return filename[0]+filename[1]
-    else :
-        raise ValueError('Filename '+filename+' should end with astring of form \'lg.mono\' or \'lg-lg.lg\' to be applied BPE on.')
+from general import ensure_exists, get_lang, execute
 
 def get_bpe_path(filename, codes_path) :
     lg = get_lang(filename)    
     return ' '+os.path.join(codes_path, 'codes.'+lg)
     
-def ensure_exists(filepath, search_in) :
-    if filepath.find('/')==-1 :
-        return 
-    
-    dir_to_search = '/'.join(filepath.split('/')[:-1])
-    dir_to_search = os.path.join(search_in, dir_to_search)
-    
-    if not os.path.isdir(dir_to_search) :
-        print("Making directory : ", dir_to_search)
-        os.makedirs(dir_to_search)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--fast_path', default='./fastBPE/fast', help='Path to fast tool for BPE.') 
@@ -64,9 +46,9 @@ for root, dirs, files in os.walk(data_dir) :
                 
                 command = cmd_initial + os.path.join(args.out_path, rectified_filename) + ' ' + cur_file_path + cmd_final
                 print(command)
-                os.system(command)
+                execute(command)
                 
                 if args.delete_old :
                     command = 'rm '+cur_file_path
                     print(command)
-                    os.system(command)
+                    execute(command)

@@ -6,6 +6,7 @@
 import os
 import argparse
 from train import get_parser
+from utils.general import execute
 
 def replace_arg(train_command, cur_value, arg) :
     parts = train_command.split(arg)
@@ -51,7 +52,7 @@ def get_new_dump(train_command, i, delete_old) :
     for j in range(1, len(dump_dirs)) :
         command = 'rm -r '+dump_dirs[j]
         if delete_old :
-            os.system(command)
+            execute(command)
     
     return train_command
 
@@ -101,7 +102,7 @@ for j in range(args.n_reps) :
         split_i_files = shift_files(split_file_dir, cur_dp)
         if i!=0 :
             train_command = get_new_dump(train_command, i, args.delete_old)
-        os.system(train_command)
+        execute(train_command)
         i=i+1
     
 shift_files(cur_dp, original_dp, common_files)

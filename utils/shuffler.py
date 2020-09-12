@@ -3,6 +3,7 @@
 
 import os
 import argparse
+from general import execute
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data_dir', default='./data/', help='The directory, each of whose files is to be shuffled')
@@ -17,13 +18,13 @@ for filename in files :
         new_filename = 'shuf'+filename
         command = 'shuf '+os.path.join(data_dir, filename)+' > '+os.path.join(data_dir, new_filename)
         print(command)
-        os.system(command)
+        execute(command)
         
         command = 'rm '+os.path.join(data_dir, filename)
         print(command)
-        os.system(command)
+        execute(command)
         
         command = 'mv '+os.path.join(data_dir, new_filename)+' '+os.path.join(data_dir, filename)
         print(command)
-        os.system(command)
+        execute(command)
         

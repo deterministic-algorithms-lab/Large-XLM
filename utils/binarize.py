@@ -5,11 +5,7 @@
 import os
 import shutil
 import argparse
-
-def execute(command) :
-    x = os.system(command)
-    if x>>8!=0 : 
-        exit(1)
+from general import execute
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--in_path', help='Path to directory have splitted(train, test , valid) files') 
