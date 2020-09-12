@@ -25,7 +25,7 @@ def is_bigfile(filepath) :
     with open(filepath, 'r') as f :
         for i, l in enumerate(f) :
             pass
-        if i+1>10000 :
+        if i+1>1000000 :
             return i+1
         print(filepath, " has ", i+1, " lines ")
         return 0

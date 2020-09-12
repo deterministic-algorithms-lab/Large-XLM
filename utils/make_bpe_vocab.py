@@ -24,7 +24,7 @@ for filename in os.listdir(os.path.join(args.data_path, 'mono/')) :
 
 #Splitting files
 splitted_path = os.path.join(args.data_path, '..', 'splitted/')
-command = 'python3 splitter.py '+splitted_path+' '+args.data_path+' '+'--split_bigfiles 10'+('--delete_old'if args.delete_old else '')
+command = 'python3 splitter.py '+splitted_path+' '+args.data_path+' '+'--split_bigfiles 20'+('--delete_old'if args.delete_old else '')
 print(command)
 execute(command)
 
