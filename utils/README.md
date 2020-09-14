@@ -127,3 +127,4 @@ python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top
 ```
 If the above command is used, then top 25000 most frequent words of each language, except English and German, are stored in the final vocabulary. For English , only top 20000 most frequent words make into the final vocabulary and similarly only top 21000 for German.
 
+Note :- The final bpe_codes for the entire multilingual dataset can be found by concatenating bpe_code files of all languages, using the ```cat``` command.
