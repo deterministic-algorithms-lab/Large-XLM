@@ -97,7 +97,7 @@ then on data in ```split1/``` + data directly under the ```data_path``` provided
 This process is repeated ```--n_reps``` times.
 
 ```
-python3 ../split_trainer.py --command "usual-command(CUDA_VISIBLE_DEVICES=0,1 python ../train.py all usual arguments)" --n_reps 4
+python3 ../split_trainer.py --command "path to file having usual-command(CUDA_VISIBLE_DEVICES=0,1 python ../train.py all usual arguments)" --n_reps 4
 ```
 ```--data_path``` in original command must correspond to directory having binarized data in format of the splitted file tree. Currently, early stopping, based on ```n_reps```
 is not supported, but will be in future.
