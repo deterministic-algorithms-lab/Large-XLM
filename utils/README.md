@@ -107,14 +107,14 @@ is not supported, but will be in future.
 
 ## Making Vocabularies For Large Multi-Lingual Datasets
 
-1.) Learns BPE codes(from mono files), split files, apply BPE to all files using corresponding BPE codes, make vocabularies. All language wise.
+1.) **Learns BPE codes(from mono files), split files, apply BPE to all files using corresponding BPE codes, make vocabularies. All language wise.**
 
 ```
 python3 make_bpe_vocab.py --data_path ../data --n_codes <num of BPE codes to learn> --fast_path ../tools/fastBPE/fast --codes_dir ../data/codes \
                           --vocab_dir ../data/vocab/ --delete_old
 ```
 
-2.) Join together the various vocabularies into single one.
+2.) **Join together the various vocabularies into single one.**
 
 ```
 python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 20000
