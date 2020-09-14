@@ -28,7 +28,8 @@ def shift_files(source_dir, dest_dir, file_lis=[]) :
     shifted_files = []
     for filename in  shift_from :
         command = "mv "+os.path.join(source_dir, filename)+' '+os.path.join(dest_dir, filename)
-        shift_files.append(filename)
+        execute(command)
+        shifted_files.append(filename)
     return shifted_files
 
 def get_new_dump(train_command, i, delete_old) :
