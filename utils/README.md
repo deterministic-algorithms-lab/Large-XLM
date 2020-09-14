@@ -103,3 +103,26 @@ python3 ../split_trainer.py --command "usual-command(CUDA_VISIBLE_DEVICES=0,1 py
 is not supported, but will be in future.
 
 **It is best to comment all ```execute()/os.system()``` calls first, and see all the commands printed; confirm their correct-ness, and then uncomment the ```execute()/os.system()``` calls, and execute the files. Especially if you are using ```--delete_path``` .**
+
+
+## Making Vocabularies For Large Multi-Lingual Datasets
+
+1.) Learns BPE codes(from mono files), split files, apply BPE to all files using corresponding BPE codes, make vocabularies. All language wise.
+
+```
+python3 make_bpe_vocab.py --data_path ../data --n_codes <num of BPE codes to learn> --fast_path ../tools/fastBPE/fast --codes_dir ../data/codes \
+                          --vocab_dir ../data/vocab/ --delete_old
+```
+
+2.) Join together the various vocabularies into single one.
+
+```
+python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 20000
+```
+The above commands joins vocabularies of all languages seperately & top 20000 words from each language make into the final vocabulary stored in the file name given in ```---final_vocab_path``` argument. If ```--absolute_top_k``` flag had been added, then top 20000 most frequent words, in the combination of vocabularies of all languages would have been chosen. 
+
+```
+python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 25000 --lg_k_dict 'en-20000-de-21000'
+```
+If the above command is used, then top 25000 most frequent words of each language, except English and German, are stored in the final vocabulary. For English , only top 20000 most frequent words make into the final vocabulary and similarly only top 21000 for German.
+
