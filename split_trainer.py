@@ -76,8 +76,8 @@ with open(args.command) as f :
     print(train_command)
 
 train_parser = get_parser()
-initial_command, train_command = train_command.split('--',1)
-train_command = '--'+train_command
+initial_command, train_command = train_command.split('train.py',1)
+initial_command = initial_command+'train.py'
 print(train_command)
 train_args = train_parser.parse_args(train_command.split())
 original_dp = train_args.data_path
