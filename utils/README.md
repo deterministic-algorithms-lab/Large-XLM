@@ -113,6 +113,7 @@ is not supported, but will be in future.
 python3 make_bpe_vocab.py --data_path ../data --n_codes <num of BPE codes to learn> --fast_path ../tools/fastBPE/fast --codes_dir ../data/codes \
                           --vocab_dir ../data/vocab/ --delete_old
 ```
+Modify [this line](https://github.com/deterministic-algorithms-lab/Large-XLM/blob/35a957727e338537fed70a8d21d7d03dd0d1927f/utils/make_bpe_vocab.py#L27) to modify how splitting is done. And [this one](https://github.com/deterministic-algorithms-lab/Large-XLM/blob/35a957727e338537fed70a8d21d7d03dd0d1927f/utils/make_bpe_vocab.py#L33) for changing how BPE is applied.
 
 2.) **Join together the various vocabularies into single one.**
 
