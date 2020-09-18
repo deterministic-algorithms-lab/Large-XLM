@@ -1,5 +1,7 @@
 # XLM
 
+**NEW** : Added Notebook for translating files in multiple languages at once, to given target languages. See [here](https://github.com/deterministic-algorithms-lab/Large-XLM/blob/master/fur_NMT_eval.ipynb)
+
 **NEW** : Added utilities for making advanced vocabularies quickly, see [here](https://github.com/deterministic-algorithms-lab/Large-XLM/tree/master/utils#making-vocabularies-for-large-multi-lingual-datasets)
 
 **NEW** : For training and processing of big multi-lingual datasets, with lesser RAM, see [here](https://github.com/deterministic-algorithms-lab/Large-XLM/tree/master/utils#processing-and-training-on-large-datasets---an-example)
