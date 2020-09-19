@@ -76,7 +76,7 @@ To chage the number of lines in test/valid sets, edit here .
 
 3.) **Apply BPE using proper codes to all the splitted files.** 
 ```
-python3 applybpe --fast_path ../tools/FastBPE/fast --out_path ../processed/ --bpe_path ../bpe_codes --data_path ../splitted/ --maintain_fs --delete_old
+python3 applybpe.py --fast_path ../tools/FastBPE/fast --out_path ../processed/ --bpe_path ../bpe_codes --data_path ../splitted/ --maintain_fs --delete_old
 ```
 The ```--maintain_fs``` flag ensures that the data files aren't all put directly in ```../processed``` folder, and that the file structure remains the same as in ```../splitted/```.
 ```--fast_path``` is used to provide the path to the ```FastBPE```'s script. See [here](https://github.com/deterministic-algorithms-lab/Large-XLM#1-preparing-the-data).
@@ -118,13 +118,18 @@ Modify [this line](https://github.com/deterministic-algorithms-lab/Large-XLM/blo
 2.) **Join together the various vocabularies into single one.**
 
 ```
-python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 20000
+python3 join_vocab.py --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 20000
 ```
 The above commands joins vocabularies of all languages seperately & top 20000 words from each language make into the final vocabulary stored in the file name given in ```---final_vocab_path``` argument. If ```--absolute_top_k``` flag had been added, then top 20000 most frequent words, in the combination of vocabularies of all languages would have been chosen. 
 
 ```
-python3 join_vocab --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 25000 --lg_k_dict 'en-20000-de-21000'
+python3 join_vocab.py --vocab_path ../data/vocab/ --final_vocab_path ../vocab --top_k 25000 --lg_k_dict 'en-20000-de-21000'
 ```
 If the above command is used, then top 25000 most frequent words of each language, except English and German, are stored in the final vocabulary. For English , only top 20000 most frequent words make into the final vocabulary and similarly only top 21000 for German.
 
-**Note** :- The final bpe_codes for the entire multilingual dataset can be found by concatenating bpe_code files of all languages, using the ```cat``` command.
+3.) **The final bpe_codes for the entire multilingual dataset are found using the following command : **
+
+```
+python3 join_codes.py --codes_path ../data/codes/ --final_codes_path ../codes --top_k 20000
+```
+The above command can be modified in the same ways as ```join_vocab.py``` .
