@@ -22,7 +22,7 @@ def get_lg_k_dict(args, lg_dict) :
     
     return out_lg_k_dict
 
-def read_dic_file(codes_path, counts={}) :
+def read_dic_file(codes_path, counts={}, split_dict={}) :
     skipped = 0
     assert os.path.isfile(codes_path), codes_path
 
@@ -33,61 +33,66 @@ def read_dic_file(codes_path, counts={}) :
                 continue
             line = line.rstrip().split()
             if len(line) != 3:
+                print(line)
                 skipped += 1
                 continue
             assert len(line) == 3, (i, line)
             assert line[2].isdigit(), (i, line)
-            key = line[0]+' '+line[1]
+            key = line[0]+line[1]
+            split_dict[key]=line[0]+' '+line[1]
             if key in counts :
                 counts[key] += int(line[2])
             else :
                 counts[key] = int(line[2])
     
     print("Skipped "+str(skipped)+" lines. ")
-    return counts
+    return counts, split_dict
 
-def write_dic_file(codes_counter, write_path) :
+def write_dic_file(codes_counter, write_path, split_dict) :
     with open(write_path, 'w+', encoding='utf-8') as f :
         for elem in codes_counter.most_common() :
-            f.write(str(elem[0])+' '+str(elem[1])+'\n')
+            f.write(split_dict[elem[0]]+' '+str(elem[1])+'\n')
+if __name__=='__main__' :
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--codes_path', help='Path to directory having codes files.')
-parser.add_argument('--final_codes_path', help='Path where final codes file will be stored.')
-parser.add_argument('--top_k', type=int, default=20000, help='Top k words will be chosen from codes of each language.')
-parser.add_argument('--lg_k_dict', help='Dictionary of language wise k, of the form \"lg-k-lg-k\". The languages not in dictionary would be assigned top_k value.')
-parser.add_argument('--absolute_top_k', action='store_true', help='If this flag is provided, top_k elements are chosen from combination of codes of all languages.')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--codes_path', help='Path to directory having codes files.')
+    parser.add_argument('--final_codes_path', help='Path where final codes file will be stored.')
+    parser.add_argument('--top_k', type=int, default=20000, help='Top k words will be chosen from codes of each language.')
+    parser.add_argument('--lg_k_dict', help='Dictionary of language wise k, of the form \"lg-k-lg-k\". The languages not in dictionary would be assigned top_k value.')
+    parser.add_argument('--absolute_top_k', action='store_true', help='If this flag is provided, top_k elements are chosen from combination of codes of all languages.')
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-lg_wise_file_dict = {}
+    lg_wise_file_dict = {}
 
-for root, dirs, files in os.walk(args.codes_path) :
-    for filename in files :
-        try :
-            lg = get_lang(filename)
-        except ValueError :
-            continue
-        if lg not in lg_wise_file_dict :
-            lg_wise_file_dict[lg] = []
-        lg_wise_file_dict[lg].append(os.path.join(root, filename))
+    split_dict = {}
 
-lg_to_codes_size_dict = get_lg_k_dict(args, lg_wise_file_dict)
+    for root, dirs, files in os.walk(args.codes_path) :
+        for filename in files :
+            try :
+                lg = get_lang(filename)
+            except ValueError :
+                continue
+            if lg not in lg_wise_file_dict :
+                lg_wise_file_dict[lg] = []
+            lg_wise_file_dict[lg].append(os.path.join(root, filename))
 
-lg_wise_counts = Counter()
-for lg, files in lg_wise_file_dict.items() :
-    counts = {}
-    for f in files :
-        counts = read_dic_file(f, counts)
-    sorted_word_counts_lis = sorted(counts.items(), key=lambda item: item[1], reverse=True)
-    
-    if not args.absolute_top_k :
-        lg_codes_sz = lg_to_codes_size_dict[lg]
-        sorted_word_counts_lis = sorted_word_counts_lis[:lg_codes_sz]
-    
-    lg_wise_counts.update({k: v for k, v in sorted_word_counts_lis})
+    lg_to_codes_size_dict = get_lg_k_dict(args, lg_wise_file_dict)
 
-if args.absolute_top_k :
-    lg_wise_counts = Counter(dict(lg_wise_counts.most_common(args.top_k)))
+    lg_wise_counts = Counter()
+    for lg, files in lg_wise_file_dict.items() :
+        counts = {}
+        for f in files :
+            counts, split_dict = read_dic_file(f, counts, split_dict)
+        sorted_word_counts_lis = sorted(counts.items(), key=lambda item: item[1], reverse=True)
+        
+        if not args.absolute_top_k :
+            lg_codes_sz = lg_to_codes_size_dict[lg]
+            sorted_word_counts_lis = sorted_word_counts_lis[:lg_codes_sz]
+        
+        lg_wise_counts.update({k: v for k, v in sorted_word_counts_lis})
 
-write_dic_file(lg_wise_counts, args.final_codes_path)
+    if args.absolute_top_k :
+        lg_wise_counts = Counter(dict(lg_wise_counts.most_common(args.top_k)))
+
+    write_dic_file(lg_wise_counts, args.final_codes_path, split_dict)

@@ -52,43 +52,44 @@ def write_dic_file(vocab_counter, write_path) :
         for elem in vocab_counter.most_common() :
             f.write(str(elem[0])+' '+str(elem[1])+'\n')
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--vocab_path', help='Path to directory having vocab files.')
-parser.add_argument('--final_vocab_path', help='Path where final vocabulary file will be stored.')
-parser.add_argument('--top_k', type=int, default=20000, help='Top k words will be chosen from vocabulary of each language.')
-parser.add_argument('--lg_k_dict', help='Dictionary of language wise k, of the form \"lg-k-lg-k\". The languages not in dictionary would be assigned top_k value.')
-parser.add_argument('--absolute_top_k', action='store_true', help='If this flag is provided, top_k elements are chosen from combination of vocabularies of all languages.')
+if __name__=='__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--vocab_path', help='Path to directory having vocab files.')
+    parser.add_argument('--final_vocab_path', help='Path where final vocabulary file will be stored.')
+    parser.add_argument('--top_k', type=int, default=20000, help='Top k words will be chosen from vocabulary of each language.')
+    parser.add_argument('--lg_k_dict', help='Dictionary of language wise k, of the form \"lg-k-lg-k\". The languages not in dictionary would be assigned top_k value.')
+    parser.add_argument('--absolute_top_k', action='store_true', help='If this flag is provided, top_k elements are chosen from combination of vocabularies of all languages.')
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-lg_wise_file_dict = {}
+    lg_wise_file_dict = {}
 
-for root, dirs, files in os.walk(args.vocab_path) :
-    for filename in files :
-        try :
-            lg = get_lang(filename)
-        except ValueError :
-            continue
-        if lg not in lg_wise_file_dict :
-            lg_wise_file_dict[lg] = []
-        lg_wise_file_dict[lg].append(os.path.join(root, filename))
+    for root, dirs, files in os.walk(args.vocab_path) :
+        for filename in files :
+            try :
+                lg = get_lang(filename)
+            except ValueError :
+                continue
+            if lg not in lg_wise_file_dict :
+                lg_wise_file_dict[lg] = []
+            lg_wise_file_dict[lg].append(os.path.join(root, filename))
 
-lg_to_vocab_size_dict = get_lg_k_dict(args, lg_wise_file_dict)
+    lg_to_vocab_size_dict = get_lg_k_dict(args, lg_wise_file_dict)
 
-lg_wise_counts = Counter()
-for lg, files in lg_wise_file_dict.items() :
-    counts = {}
-    for f in files :
-        counts = read_dic_file(f, counts)
-    sorted_word_counts_lis = sorted(counts.items(), key=lambda item: item[1], reverse=True)
-    
-    if not args.absolute_top_k :
-        lg_vocab_sz = lg_to_vocab_size_dict[lg]
-        sorted_word_counts_lis = sorted_word_counts_lis[:lg_vocab_sz]
-    
-    lg_wise_counts.update({k: v for k, v in sorted_word_counts_lis})
+    lg_wise_counts = Counter()
+    for lg, files in lg_wise_file_dict.items() :
+        counts = {}
+        for f in files :
+            counts = read_dic_file(f, counts)
+        sorted_word_counts_lis = sorted(counts.items(), key=lambda item: item[1], reverse=True)
+        
+        if not args.absolute_top_k :
+            lg_vocab_sz = lg_to_vocab_size_dict[lg]
+            sorted_word_counts_lis = sorted_word_counts_lis[:lg_vocab_sz]
+        
+        lg_wise_counts.update({k: v for k, v in sorted_word_counts_lis})
 
-if args.absolute_top_k :
-    lg_wise_counts = Counter(dict(lg_wise_counts.most_common(args.top_k)))
+    if args.absolute_top_k :
+        lg_wise_counts = Counter(dict(lg_wise_counts.most_common(args.top_k)))
 
-write_dic_file(lg_wise_counts, args.final_vocab_path)
+    write_dic_file(lg_wise_counts, args.final_vocab_path)
